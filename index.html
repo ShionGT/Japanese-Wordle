@@ -22,8 +22,8 @@
     <div class="wordlebox">
 
         <!-- First ROW -->
-        <input class="worrow" id="fifif" maxlength="2" oninput=moveToNext(fifif,fifif,fisef)>
-        <input class="worrow" id="fisef" maxlength="2" oninput=moveToNext(fifif,fisef,fithf)>
+        <input class="worrow" id="fifif" maxlength="2" oninput=moveToNext(fifif,fifif,fisef)> <!-- use "onkeydown=" later to handle backspaces -->
+        <input class="worrow" id="fisef" maxlength="2" oninput=moveToNext(fifif,fisef,fithf)> <!-- onKeyDown(e), e.key == "Backspace", onkeydown=oKD(event), type shit-->
         <input class="worrow" id="fithf" maxlength="2" oninput=moveToNext(fisef,fithf,fifof)>
         <input class="worrow" id="fifof" maxlength="2" oninput=moveToNext(fithf,fifof,fifof)>
 

@@ -83,7 +83,39 @@ function moveToNext(previousField, currentField, nextField) {
     }
 }
 
-function getUserAnswer(first, second, third, fourth) {
-    return "" + first.value + second.value + third.value + fourth.value;
+function getGroupInputs(className, groupPrefix) {
+  const order = ['fi', 'se', 'th', 'fo', 'fv']; // fi=1st, se=2nd, th=3rd, fo=4th, fv=5th
+
+  // Build a regex like /^fv(fi|se|th|fo|fv)f$/
+  const regex = new RegExp(`^${groupPrefix}(fi|se|th|fo|fv)f$`);
+
+  // get all matching inputs
+  const inputs = Array.from(document.querySelectorAll('.' + className))
+    .filter(input => regex.test(input.id));
+
+  // sort based on index in order array
+  inputs.sort((a, b) => {
+    const aKey = order.findIndex(k => a.id.includes(k));
+    const bKey = order.findIndex(k => b.id.includes(k));
+    return aKey - bKey;
+  });
+
+  return inputs.map(i => i.value);
+}
+
+
+function collectAnswers(className) {
+  // Get all elements with class '.clas-name'
+  const inputs = document.querySelectorAll('.' + className);
+
+  // Convert NodeList to array and extract values
+  const values = Array.from(inputs).map(input => input.value);
+
+  // Join or process as needed
+  const answer = values.join('');
+  console.log(answer);
+
+  // Example: return or use it in other logic
+  return answer;
 }
 
