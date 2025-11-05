@@ -4,67 +4,6 @@
         color: white;
     }
 
-    .github-button {
-        background-color: limegreen;
-        color: white;
-        border: none;
-        height: 40px;
-        width: 80px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 5px;
-        transition: box-shadow .3s;
-    }
-
-    .github-button:hover {
-        box-shadow: 0 0 30px rgb(110, 181, 97);
-    }
-
-    .github-button:active {
-        background-color: darkgreen;
-    }
-
-    .linkedin-button {
-        background-color: dodgerblue;
-        color: white;
-        border: none;
-        height: 40px;
-        width: 90px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 5px;
-        transition: box-shadow .3s;
-    }
-
-    .linkedin-button:hover {
-        box-shadow: 0 0 30px rgb(0, 196, 255);
-    }
-
-    .linkedin-button:active {
-        background-color: darkblue;
-    }
-
-    .youtube-button {
-        background-color: red;
-        color: white;
-        border: none;
-        height: 40px;
-        width: 90px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 5px;
-        transition: box-shadow .3s;
-    }
-
-    .youtube-button:hover {
-        box-shadow: 0 0 30px rgb(255, 95, 125);
-    }
-
-    .youtube-button:active {
-        background-color: darkred;
-        box-shadow: 0 0 30px rgb(0, 0, 0);
-    }
-
     .wordlebox {
         width: 23%;
         height: 25%;
