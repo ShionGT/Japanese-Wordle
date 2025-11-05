@@ -1,63 +1,90 @@
 <!DOCTYPE html>
 <html lang="ja">
 <link rel="stylesheet" href="css/wordle.css">
-<header>
-    <meta charset="UTF-8">
-    <h1>
-        Japanese Worldle
-    </h1>
 
-    <p>
-        Work in progress. Currently developing japanese worldle for learning purposes.
-        Pick a letter in to reveal, and guess what 4 letter the word is. If the letter is in the word,
-        and the the postion of the letter is corret, the box will turn green. If letter is in the word,
-        but the position is not right, the box will turn yellow.
-    </p>
-</header>
+<head>
+    <meta charset="UTF-8">
+    <title>Japanese Wordle</title>
+</head>
 
 <!-- Wordle build goes down here. -->
 
 <body>
-
+    <header>
+        <h1>
+            Japanese Worldle
+        </h1>
+    </header>
+    <p>
+        Work in progress. Currently developing japanese worldle for learning purposes.
+        Pick a letter in to reveal, and guess what 4 letter the word is. If the letter is in the word,
+        and the the postion of the letter is corret, the box will turn green. If letter is in the word,
+        but the position is not right, the box will turn yellow. If the letter with kuten is not correct,
+        but shares the same chacter, the box will be orange. If the letter is not in the word, the box will turn gray.
+    </p>
     <div class="wordlebox">
 
         <!-- First ROW -->
         <!-- use "onkeydown=" later to handle backspaces -->
         <!-- onKeyDown(e), e.key == "Backspace", onkeydown=oKD(event), type shit-->
-        <input class="worrow" id="fifif" maxlength="3" oninput=moveToNext(fifif,fisef) onkeydown=onKeyDown(event,null,fifif)>
-        <input class="worrow" id="fisef" maxlength="3" oninput=moveToNext(fisef,fithf) onkeydown=onKeyDown(event,fifif,fisef)>
-        <input class="worrow" id="fithf" maxlength="3" oninput=moveToNext(fithf,fifof) onkeydown=onKeyDown(event,fisef,fithf)>
-        <input class="worrow" id="fifof" maxlength="3" oninput=moveToNext(fifof,null) onkeydown=onKeyDown(event,fithf,fifof)>
+        <input class="worrow" id="fifif" maxlength="3" oninput=moveToNext(fifif,fisef)
+            onkeydown=onKeyDown(event,null,fifif)>
+        <input class="worrow" id="fisef" maxlength="3" oninput=moveToNext(fisef,fithf)
+            onkeydown=onKeyDown(event,fifif,fisef)>
+        <input class="worrow" id="fithf" maxlength="3" oninput=moveToNext(fithf,fifof)
+            onkeydown=onKeyDown(event,fisef,fithf)>
+        <input class="worrow" id="fifof" maxlength="3" oninput=moveToNext(fifof,null)
+            onkeydown=onKeyDown(event,fithf,fifof)>
 
         <!-- Second ROW -->
-        <input class="worrow" id="sefif" maxlength="3" oninput=moveToNext(sefif,sesef) onkeydown=onKeyDown(event,null,sefif)>
-        <input class="worrow" id="sesef" maxlength="3" oninput=moveToNext(sesef,sethf) onkeydown=onKeyDown(event,sefif,sesef)>
-        <input class="worrow" id="sethf" maxlength="3" oninput=moveToNext(sethf,sefof) onkeydown=onKeyDown(event,sesef,sethf)>
-        <input class="worrow" id="sefof" maxlength="3" oninput=moveToNext(sefof,sefof) onkeydown=onKeyDown(event,sethf,sefof)>
+        <input class="worrow" id="sefif" maxlength="3" oninput=moveToNext(sefif,sesef)
+            onkeydown=onKeyDown(event,null,sefif)>
+        <input class="worrow" id="sesef" maxlength="3" oninput=moveToNext(sesef,sethf)
+            onkeydown=onKeyDown(event,sefif,sesef)>
+        <input class="worrow" id="sethf" maxlength="3" oninput=moveToNext(sethf,sefof)
+            onkeydown=onKeyDown(event,sesef,sethf)>
+        <input class="worrow" id="sefof" maxlength="3" oninput=moveToNext(sefof,null)
+            onkeydown=onKeyDown(event,sethf,sefof)>
 
         <!-- Third ROW -->
-        <input class="worrow" id="thfif" maxlength="3" oninput=moveToNext(thfif,thsef) onkeydown=onKeyDown(event,null,thfif)>
-        <input class="worrow" id="thsef" maxlength="3" oninput=moveToNext(thsef,ththf) onkeydown=onKeyDown(event,thfif,thsef)>
-        <input class="worrow" id="ththf" maxlength="3" oninput=moveToNext(ththf,thfof) onkeydown=onKeyDown(event,thsef,ththf)>
-        <input class="worrow" id="thfof" maxlength="3" oninput=moveToNext(thfof,thfof) onkeydown=onKeyDown(event,ththf,thfof)>
+        <input class="worrow" id="thfif" maxlength="3" oninput=moveToNext(thfif,thsef)
+            onkeydown=onKeyDown(event,null,thfif)>
+        <input class="worrow" id="thsef" maxlength="3" oninput=moveToNext(thsef,ththf)
+            onkeydown=onKeyDown(event,thfif,thsef)>
+        <input class="worrow" id="ththf" maxlength="3" oninput=moveToNext(ththf,thfof)
+            onkeydown=onKeyDown(event,thsef,ththf)>
+        <input class="worrow" id="thfof" maxlength="3" oninput=moveToNext(thfof,null)
+            onkeydown=onKeyDown(event,ththf,thfof)>
 
         <!-- Fourth ROW -->
-        <input class="worrow" id="fofif" maxlength="3" oninput=moveToNext(fofif,fosef) onkeydown=onKeyDown(event,null,fofif)>
-        <input class="worrow" id="fosef" maxlength="3" oninput=moveToNext(fosef,fothf) onkeydown=onKeyDown(event,fofif,fosef)>
-        <input class="worrow" id="fothf" maxlength="3" oninput=moveToNext(fothf,fofof) onkeydown=onKeyDown(event,fosef,fothf)>
-        <input class="worrow" id="fofof" maxlength="3" oninput=moveToNext(fofof,fofof) onkeydown=onKeyDown(event,fothf,fofof)>
+        <input class="worrow" id="fofif" maxlength="3" oninput=moveToNext(fofif,fosef)
+            onkeydown=onKeyDown(event,null,fofif)>
+        <input class="worrow" id="fosef" maxlength="3" oninput=moveToNext(fosef,fothf)
+            onkeydown=onKeyDown(event,fofif,fosef)>
+        <input class="worrow" id="fothf" maxlength="3" oninput=moveToNext(fothf,fofof)
+            onkeydown=onKeyDown(event,fosef,fothf)>
+        <input class="worrow" id="fofof" maxlength="3" oninput=moveToNext(fofof,null)
+            onkeydown=onKeyDown(event,fothf,fofof)>
 
         <!-- Fifth ROW -->
-        <input class="worrow" id="fvfif" maxlength="3" oninput=moveToNext(fvfif,fvsef) onkeydown=onKeyDown(event,null,fvfif)>
-        <input class="worrow" id="fvsef" maxlength="3" oninput=moveToNext(fvsef,fvthf) onkeydown=onKeyDown(event,fvfif,fvsef)>
-        <input class="worrow" id="fvthf" maxlength="3" oninput=moveToNext(fvthf,fvfof) onkeydown=onKeyDown(event,fvsef,fvthf)>
-        <input class="worrow" id="fvfof" maxlength="3" oninput=moveToNext(fvfof,fvfof) onkeydown=onKeyDown(event,fvthf,fvfof)>
+        <input class="worrow" id="fvfif" maxlength="3" oninput=moveToNext(fvfif,fvsef)
+            onkeydown=onKeyDown(event,null,fvfif)>
+        <input class="worrow" id="fvsef" maxlength="3" oninput=moveToNext(fvsef,fvthf)
+            onkeydown=onKeyDown(event,fvfif,fvsef)>
+        <input class="worrow" id="fvthf" maxlength="3" oninput=moveToNext(fvthf,fvfof)
+            onkeydown=onKeyDown(event,fvsef,fvthf)>
+        <input class="worrow" id="fvfof" maxlength="3" oninput=moveToNext(fvfof,null)
+            onkeydown=onKeyDown(event,fvthf,fvfof)>
 
         <!-- Sixth ROW -->
-        <input class="worrow" id="sxfif" maxlength="3" oninput=moveToNext(sxfif,sxsef) onkeydown=onKeyDown(event,null,sxfif)>
-        <input class="worrow" id="sxsef" maxlength="3" oninput=moveToNext(sxsef,sxthf) onkeydown=onKeyDown(event,sxfif,sxsef)>
-        <input class="worrow" id="sxthf" maxlength="3" oninput=moveToNext(sxthf,sxfof) onkeydown=onKeyDown(event,sxsef,sxthf)>
-        <input class="worrow" id="sxfof" maxlength="3" oninput=moveToNext(sxfof,sxfof) onkeydown=onKeyDown(event,sxthf,sxfof)>
+        <input class="worrow" id="sxfif" maxlength="3" oninput=moveToNext(sxfif,sxsef)
+            onkeydown=onKeyDown(event,null,sxfif)>
+        <input class="worrow" id="sxsef" maxlength="3" oninput=moveToNext(sxsef,sxthf)
+            onkeydown=onKeyDown(event,sxfif,sxsef)>
+        <input class="worrow" id="sxthf" maxlength="3" oninput=moveToNext(sxthf,sxfof)
+            onkeydown=onKeyDown(event,sxsef,sxthf)>
+        <input class="worrow" id="sxfof" maxlength="3" oninput=moveToNext(sxfof,null)
+            onkeydown=onKeyDown(event,sxthf,sxfof)>
 
 
 

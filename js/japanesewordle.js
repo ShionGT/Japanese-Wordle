@@ -101,6 +101,7 @@ hiraganas.set('xyu', 'ゅ');
 hiraganas.set('xyo', 'ょ');
 hiraganas.set('xtu', 'っ');
 
+var answer = "";
 
 /**
  * automatically moves to the next column if a japanese character is typed in
@@ -108,30 +109,39 @@ hiraganas.set('xtu', 'っ');
  * @param {*} nextField the next input field to move to
  */
 function moveToNext(currentField, nextField) {
+  const strr = currentField.value + "";
+  currentField.value = currentField.value.trim();
 
-    const strr = currentField.value + "";
-    currentField.value =  currentField.value.trim();
-
-    if (strr.endsWith('a') || strr.endsWith('i') || strr.endsWith('u') || strr.endsWith('e') || strr.endsWith('o') || strr.endsWith('n')) {
-        japchar = hiraganas.get(strr);
-        if (japchar != undefined) {
-            currentField.value = japchar;
-            nextField.focus();
-            length = nextField.value.length;
-            nextField.setSelectionRange(length, length);
-        }
+  if (strr.endsWith('a') || strr.endsWith('i') || strr.endsWith('u') || strr.endsWith('e') || strr.endsWith('o') || strr.endsWith('n')) {
+    japchar = hiraganas.get(strr);
+    if (japchar != undefined) {
+      currentField.value = japchar;
+      if (nextField != null) {
+        nextField.focus();
+      }
     }
+  }
 }
 
 function onKeyDown(event, previousField, currentField) {
-    const key = event.key;
+  const key = event.key;
 
-    if (key === "Backspace" || key === "Delete") {
-        if (currentField.value == "") {
-            previousField.focus();
-        }
+  if (key === "Backspace" || key === "Delete") {
+    if (previousField != null && currentField.value == "") {
+      previousField.focus();
+      length = previousField.value.length;
+      previousField.setSelectionRange(length, length);
     }
+  }
+
+  if (key === "Enter") {
+    if (currentField.id.endsWith("fof")) {
+      // user guesses here
+      processGuess(currentField);
+    }
+  }
 }
+
 
 function getGroupInputs(className, groupPrefix) {
   const order = ['fi', 'se', 'th', 'fo', 'fv']; // fi=1st, se=2nd, th=3rd, fo=4th, fv=5th
@@ -153,19 +163,56 @@ function getGroupInputs(className, groupPrefix) {
   return inputs.map(i => i.value);
 }
 
-
-function collectAnswers(className) {
-  // Get all elements with class '.clas-name'
-  const inputs = document.querySelectorAll('.' + className);
-
-  // Convert NodeList to array and extract values
-  const values = Array.from(inputs).map(input => input.value);
-
-  // Join or process as needed
-  const answer = values.join('');
-  console.log(answer);
-
-  // Example: return or use it in other logic
-  return answer;
+// TODO: set the answer here
+function getAnswerAsArray() {
+  answer = "さくらい"; // example answer
+  return answer.split('');
 }
+
+
+
+// TODO: write logic to process the guess
+function processGuess(currentField) {
+  // get the group prefix from the current field id
+  const order = ['fi', 'se', 'th', 'fo', 'fv']; // fi=1st, se=2nd, th=3rd, fo=4th, fv=5th
+  const groupPrefix = currentField.id.substring(0, 2); // e.g., 'fv' from 'fvfof'
+  const userAnswer = getGroupInputs(currentField.className, groupPrefix).join('');
+
+  console.log("Processing guess: " + userAnswer);
+
+  // Add your logic to process the guess here
+  // Add your logic to process the guess here
+  // Add your logic to process the guess here
+  // Add your logic to process the guess here
+  // Add your logic to process the guess here
+  // Add your logic to process the guess here
+  // Add your logic to process the guess here
+  // Add your logic to process the guess here
+  // Add your logic to process the guess here
+  // Add your logic to process the guess here
+
+  const answerArray = getAnswerAsArray();
+
+  for (let i = 0; i < userAnswer.length; i++) {
+    if (userAnswer[i] === answerArray[i]) {
+      // correct position
+      document.getElementById(groupPrefix + order[i] + 'f').style.backgroundColor = 'green';
+    } else if (answerArray.includes(userAnswer[i])) {
+      // wrong position
+      document.getElementById(groupPrefix + order[i] + 'f').style.backgroundColor = 'yellow';
+    } else {
+      // not in answer
+      document.getElementById(groupPrefix + order[i] + 'f').style.backgroundColor = 'lightgray';
+    }
+  }
+
+  // lock input after submission keep at end
+  const inputs = document.querySelectorAll('.' + currentField.className);
+  inputs.forEach(input => {
+    if (input.id.startsWith(groupPrefix)) {
+      input.disabled = true;
+    }
+  });
+}
+
 
