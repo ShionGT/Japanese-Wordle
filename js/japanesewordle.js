@@ -69,6 +69,7 @@ hiraganas.set('go', 'ご');
 // ざ行
 hiraganas.set('za', 'ざ');
 hiraganas.set('zi', 'じ');
+hiraganas.set('ji', 'じ');
 hiraganas.set('zu', 'ず');
 hiraganas.set('ze', 'ぜ');
 hiraganas.set('zo', 'ぞ');
@@ -196,7 +197,7 @@ function processGuess(currentField) {
   for (let i = 0; i < userAnswer.length; i++) {
     if (userAnswer[i] === answerArray[i]) {
       // correct position
-      document.getElementById(groupPrefix + order[i] + 'f').style.backgroundColor = 'green';
+      document.getElementById(groupPrefix + order[i] + 'f').style.backgroundColor = 'lightgreen';
     } else if (answerArray.includes(userAnswer[i])) {
       // wrong position
       document.getElementById(groupPrefix + order[i] + 'f').style.backgroundColor = 'yellow';
