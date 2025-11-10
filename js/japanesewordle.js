@@ -168,7 +168,7 @@ function onKeyDown(event, previousField, currentField) {
 
 
 function getGroupInputs(className, groupPrefix) {
-  const order = ['fi', 'se', 'th', 'fo', 'fv']; // fi=1st, se=2nd, th=3rd, fo=4th, fv=5th
+  const order = ['fi', 'se', 'th', 'fo', 'fv', 'sx', 'sv', 'ei']; // fi=1st, se=2nd, th=3rd, fo=4th, fv=5th
 
   // Build a regex like /^fv(fi|se|th|fo|fv)f$/
   const regex = new RegExp(`^${groupPrefix}(fi|se|th|fo|fv)f$`);
@@ -232,7 +232,7 @@ async function getNewAnswer() {
 // TODO: write logic to process the guess
 async function processGuess(currentField) {
       // get the group prefix from the current field id
-      const order = ['fi', 'se', 'th', 'fo', 'fv']; // fi=1st, se=2nd, th=3rd, fo=4th, fv=5th
+      const order = ['fi', 'se', 'th', 'fo', 'fv', 'sx', 'sv', 'ei']; // fi=1st, se=2nd, th=3rd, fo=4th, fv=5th
       const groupPrefix = currentField.id.substring(0, 2); // e.g., 'fv' from 'fvfof'
       const userAnswer = await getGroupInputs(currentField.className, groupPrefix);
 
