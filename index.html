@@ -10,15 +10,14 @@
 <!-- Wordle build goes down here. -->
 
 <body id="background" onload="onLoad()">
+    <p id="loadingstatus">
+        Loading JSON files...
+    </p>
     <header>
         <h1>
             JP Worldle
         </h1>
     </header>
-
-    <p id="loadingstatus">
-        Loading JSON files...
-    </p>
 
     <div class="wordlebox">
 
@@ -84,7 +83,7 @@
         <input class="worrow" id="sxfof" maxlength="3" oninput=moveToNext(sxfof,null)
             onkeydown=onKeyDown(event,sxthf,sxfof)>
 
-                <!-- Seventh ROW (sv)-->
+        <!-- Seventh ROW (sv)-->
         <input class="worrow" id="svfif" maxlength="3" oninput=moveToNext(svfif,svsef)
             onkeydown=onKeyDown(event,null,svfif)>
         <input class="worrow" id="svsef" maxlength="3" oninput=moveToNext(svsef,svthf)
@@ -94,7 +93,7 @@
         <input class="worrow" id="svfof" maxlength="3" oninput=moveToNext(svfof,null)
             onkeydown=onKeyDown(event,svthf,svfof)>
 
-                <!-- Eigth ROW (ei) -->
+        <!-- Eigth ROW (ei) -->
         <input class="worrow" id="eifif" maxlength="3" oninput=moveToNext(eifif,eisef)
             onkeydown=onKeyDown(event,null,eifif)>
         <input class="worrow" id="eisef" maxlength="3" oninput=moveToNext(eisef,eithf)
@@ -107,15 +106,10 @@
 
     <div class="intsructions">
         <h3 id="rules" style="margin-bottom: 0;">
-            Rules:
+            ルール:
         </h3>
         <label for="rules" style="margin-top: 0;">
-            Work in progress. Currently developing japanese worldle for learning purposes.
-            Pick a letter in to reveal, and guess what 4 letter the word is. If the letter is in the word,
-            and the the postion of the letter is corret, the box will turn green. If letter is in the word,
-            but the position is not right, the box will turn yellow. If the letter with kuten is not correct,
-            but shares the same chacter, the box will be orange. If the letter is not in the word, the box will turn
-            gray.
+            日本語 Wordle を開発中です。今回の４文字単語を当ててみよう！4文字分の単語を組み合わせて答えを当てるゲームです。４文字単語を入力すると、文字の色でヒントがでる。<br>緑：文字と位置が正解。<br>黄：文字は正しいけど位置が違う。<br>灰色：その文字は含まれてない
         </label>
     </div>
     <div id="gameoverpop" class="gameoverpop" popover>
