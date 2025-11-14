@@ -345,7 +345,7 @@ function showVictory() {
   setTimeout(function () {
     var popup = document.getElementById('victorypopup');
     popup.style.display = 'block';
-    document.getElementById("victorypopup").innerText = `正解！答えは「${answer}(${answerKanji})」でした！`
+    document.getElementById("victorypopupmsg").innerText = `正解！答えは「${answer}(${answerKanji})」でした！`
     document.getElementById("background").style.backgroundColor = 'lightgreen';
   }, 1000);
 }
