@@ -256,24 +256,16 @@ async function processGuess(currentField) {
 
   // TODO: Add your logic to process the guess here
   // TODO: Add your logic to process the guess here
-  // Add your logic to process the guess here
-  // Add your logic to process the guess here
-  // Add your logic to process the guess here
-  // Add your logic to process the guess here
-  // Add your logic to process the guess here
-  // Add your logic to process the guess here
-  // Add your logic to process the guess here
-  // Add your logic to process the guess here
 
-    // part of checking valid word
+  // part of checking valid word
   isInvalidAnswer = false;
+  const joinedUserAnswer = userAnswer.join('')
 
   // before locking, check is the word is valid
   data = await fetchData(`json/katakana_data_${userAnswer[0]}行.json`).then((data) => {
     if (data) {
       d_len = data.length;
       console.log(`Loaded ${d_len} words from the file.`);
-      const joinedUserAnswer = userAnswer.join('')
       matchedWord = data.find(word => word.kana == joinedUserAnswer);
       console.log(userAnswer + " matches with: " + matchedWord)
       if (!matchedWord)
@@ -306,6 +298,8 @@ async function processGuess(currentField) {
     }
   }
 
+  const isCorrect = answer == joinedUserAnswer;
+
   // lock input after submission keep at end
   const inputs = document.querySelectorAll('.' + currentField.className);
   inputs.forEach(input => {
@@ -313,7 +307,7 @@ async function processGuess(currentField) {
       input.disabled = true;
     }
     const ordIndex = order.indexOf(groupPrefix) + 1;
-    if (input.id.startsWith([order[ordIndex]])) {
+    if (input.id.startsWith([order[ordIndex]]) && !isCorrect) {
       input.disabled = false;
 
       if (order.length <= ordIndex || ordIndex < 0) {
@@ -321,6 +315,11 @@ async function processGuess(currentField) {
       }
     }
   });
+
+  // when the answer is actually correct
+  if (isCorrect) {
+    showVictory()
+  }
 }
 
 
@@ -334,10 +333,21 @@ async function onLoad() {
       input.disabled = true;
     }
   })
+  document.getElementsByClassName('.worrow').style = 'transiton: 1000ms all ease-in';
 }
 
 function closePopUp() {
   document.getElementById("gameoverpop").style.display = 'none';
+  document.getElementById("victorypopup").style.display = 'none';
+}
+
+function showVictory() {
+  setTimeout(function () {
+    var popup = document.getElementById('victorypopup');
+    popup.style.display = 'block';
+    document.getElementById("victorypopup").innerText = `正解！答えは「${answer}(${answerKanji})」でした！`
+    document.getElementById("background").style.backgroundColor = 'lightgreen';
+  }, 1000);
 }
 
 function showGameOver() {
@@ -347,9 +357,9 @@ function showGameOver() {
 }
 
 function quickInvalidPopUp(delayMilliseconds) {
-    var popup = document.getElementById('quickinvalidpop');
-    popup.style.display = 'block'; // Show the popup
-    setTimeout(function() {
-      popup.style.display = 'none'; // Hide the popup after the delay
-    }, delayMilliseconds);
-  }
+  var popup = document.getElementById('quickinvalidpop');
+  popup.style.display = 'block'; // Show the popup
+  setTimeout(function () {
+    popup.style.display = 'none'; // Hide the popup after the delay
+  }, delayMilliseconds);
+}

@@ -9,7 +9,7 @@
 
 <!-- Wordle build goes down here. -->
 
-<body onload="onLoad()">
+<body id="background" onload="onLoad()">
     <header>
         <h1>
             JP Worldle
@@ -128,6 +128,11 @@
     <div id="quickinvalidpop" popover>
         <h3>
             この単語は単語シストには存在しません！
+        </h3>
+    </div>
+    <div id="victorypopup" popover>
+        <h3 id="victorypopup">
+            正解！単語が当たりました！
         </h3>
     </div>
 </body>

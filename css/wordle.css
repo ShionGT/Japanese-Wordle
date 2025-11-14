@@ -3,6 +3,7 @@
         background-color: rgb(213, 213, 213);
         color: rgb(76, 76, 76);
         align-items: center;
+        transition: 2000ms ease-in-out;
     }
 
     .intsructions {
@@ -33,7 +34,7 @@
         height: 100%;
         font-size: 32px;
         text-align: center;
-        transition: 300ms all ease-in;
+        transition: 1000ms ease-in;
     }
 
     .gameoverpopup {
