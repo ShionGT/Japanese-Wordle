@@ -417,6 +417,6 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
-/.idea
-/output
-/python/output
+.idea/
+output/
+python/output/
