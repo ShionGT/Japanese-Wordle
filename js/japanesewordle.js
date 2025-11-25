@@ -393,7 +393,7 @@ function getCorrectionStateArray(answerList, guessList) {
       res[i] = 2;
       continue;
     }
-    for (j = i; j < temp.length; j++) {
+    for (j = 0; j < temp.length; j++) {
       if (guessList[i] == temp[j]) {
         temp[j] = '1';
         res[i] = 1;
@@ -406,3 +406,17 @@ function getCorrectionStateArray(answerList, guessList) {
   // console.log(`temp=${temp} res=${res} guessList=${guessList} answerList=${answerList}`)
   return res;
 }
+
+// async function createKeyboards() {
+//   const tableSection = document.getElementById('jp_preview_keyboard');
+//   for (i = 0; i < hiraganaArray.length; i++) {
+//     const id = hiraganaArray[i] + 'key';
+//     tableSection.innerHTML += `<button id="${id}" onclick=typeKey("${id}")>${hiraganaArray[i]}</button>\n`;
+//   }
+// }
+
+// function typeKey(inputID) {
+//   const keyStr = hiraganaArray[i] + 'key';
+//   key = document.getElementById(keyStr);
+
+// }

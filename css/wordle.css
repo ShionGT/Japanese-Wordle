@@ -4,6 +4,7 @@
         color: rgb(76, 76, 76);
         align-items: center;
         transition: 2000ms ease-in-out;
+        min-width: 500px;
     }
 
     .intsructions {
@@ -11,6 +12,7 @@
         margin: 0 auto;
         display: block;
         width: 50%;
+        font-size: small;
     }
 
     header {
@@ -18,20 +20,22 @@
     }
 
     .wordlebox {
-        width: 30%;
+        width: 40%;
         height: auto;
         margin: 0 auto;
         display: grid; /* Makes the container a grid container */
-        column-count: 6;
+        column-count: 8;
+        justify-content: center;
         grid-template-columns: 1fr 1fr 1fr 1fr; /* Creates three equal-width columns */
         column-rule: 1px solid #949494;
-        padding: 5%;
+        box-sizing: content-box;
+        padding: 10px;
+        min-width: 200px;
     }
 
     .worrow {
-        border: 1px solid #ccc;
-        width: 100%;
-        height: 100%;
+        width: 96%;
+        height: 1.5em;
         font-size: 32px;
         text-align: center;
         transition: 1000ms ease-in;
