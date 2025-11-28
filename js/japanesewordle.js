@@ -101,6 +101,7 @@ hiraganas.set('xya', 'ゃ');
 hiraganas.set('xyu', 'ゅ');
 hiraganas.set('xyo', 'ょ');
 hiraganas.set('xtu', 'っ');
+hiraganas.set('xtsu', 'っ');
 
 /**
  * ・清音（46文字）: 50音表の基本となる「あいうえお」などの文字。
@@ -136,7 +137,9 @@ function moveToNext(currentField, nextField) {
   const strr = currentField.value + "";
   currentField.value = currentField.value.trim();
 
-  if (strr.endsWith('a') || strr.endsWith('i') || strr.endsWith('u') || strr.endsWith('e') || strr.endsWith('o') || strr.endsWith('n')) {
+  if (hiraganaArray.includes(strr) && nextField != null) {
+    nextField.focus();
+  } else if (strr.endsWith('a') || strr.endsWith('i') || strr.endsWith('u') || strr.endsWith('e') || strr.endsWith('o') || strr.endsWith('n')) {
     japchar = hiraganas.get(strr);
     if (japchar != undefined) {
       currentField.value = japchar;
@@ -208,7 +211,8 @@ async function getNewAnswer() {
   let answer = "";
   // create random values to select a random hiragana character
   let randomNum = Math.round(Math.random() * 70); // there are 71 hiragana characters
-  while (hiraganaArray[randomNum] == 'づ') { // no word start from 「づ」
+  console.log(hiraganaArray[70])
+  while (hiraganaArray[randomNum] == 'づ' || hiraganaArray[randomNum] == 'を' || hiraganaArray[randomNum] == 'ん') { // no word start from 「づ」「を」「ん」
     randomNum = Math.round(Math.random() * 70); // there are 71 hiragana characters
   }
 
@@ -257,7 +261,6 @@ async function processGuess(currentField) {
   console.log("Processing guess: " + userAnswer);
 
   // TODO: Add your logic to process the guess here
-  // TODO: Add your logic to process the guess here
 
   // part of checking valid word
   isInvalidAnswer = false;
@@ -269,11 +272,12 @@ async function processGuess(currentField) {
       d_len = data.length;
       console.log(`Loaded ${d_len} words from the file.`);
       matchedWord = data.find(word => word.kana == joinedUserAnswer);
-      console.log(userAnswer + " matches with: " + matchedWord)
-      if (!matchedWord)
+      // console.log(userAnswer + " matches with: " + matchedWord)
+      if (!matchedWord) {
         isInvalidAnswer = true;
-    } else {
-      isInvalidAnswer = true;
+      } else {
+        isInvalidAnswer = true;
+      }
     }
   });
 
@@ -372,6 +376,7 @@ function quickInvalidPopUp(delayMilliseconds) {
   }, delayMilliseconds);
 }
 
+
 /**
  * for some i, res[i] = 2 if correct, 1 if correct letter but incorrect spot, or 0 if incorrect
  * @param {*} answerList - the correct answer of the word in a list
@@ -380,29 +385,29 @@ function quickInvalidPopUp(delayMilliseconds) {
  */
 function getCorrectionStateArray(answerList, guessList) {
   // res is always propertional to user guess index
-  let temp = [...answerList];
   let res = new Array(answerList.length);
+  let tempAns = [...answerList];
 
-  // testing out before anything runs
   // console.log(`temp=${temp} res=${res} guessList=${guessList} answerList=${answerList}`)
 
   // logn search thru the words
   for (i = 0; i < answerList.length; i++) {
     if (guessList[i] === answerList[i]) {
-      temp[i] = '2';
+      tempAns[i] = '2'
       res[i] = 2;
-      continue;
-    }
-    for (j = 0; j < temp.length; j++) {
-      if (guessList[i] == temp[j]) {
-        temp[j] = '1';
-        res[i] = 1;
-      } else if (res[i] != 2 && res[i] != 1) {
-        temp[i] = '0';
-        res[i] = 0;
-      }
     }
   }
+    for (i = 0; i < res.length; i++) {
+      if (res[i] == 2) {
+        continue;
+      }
+      for (j = 0; j < res.length; j++) {
+        if (guessList[i] == tempAns[j]) {
+          tempAns[j] = '1'
+          res[i] = 1
+        }
+      }
+    }
   // console.log(`temp=${temp} res=${res} guessList=${guessList} answerList=${answerList}`)
   return res;
 }
