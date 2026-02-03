@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ja">
+  <link rel="stylesheet" href="css/wordle.css" />
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Japanese Wordle | 日本語版 Worlde</title>
+    <!-- script -->
+    <script charset="UTF-8" src="js/japanesewordle.js" defer></script>
+  </head>
+
+  <!-- Wordle build goes down here. -->
+
+  <body id="background" onload="onLoad()">
+    <p id="loadingstatus">Loading JSON files...</p>
+    <header>
+      <h1>JP Worldle</h1>
+    </header>
+    <section id="game">
+      <div class="wordlebox">
+        <!-- First ROW (fi) -->
+        <!-- use "onkeydown=" later to handle backspaces -->
+        <!-- onKeyDown(e), e.key == "Backspace", onkeydown=oKD(event), type shit-->
+        <input
+          class="worrow"
+          id="fifif"
+          maxlength="3"
+          oninput="moveToNext(fifif, fisef)"
+          onkeydown="onKeyDown(event, null, fifif)"
+        />
+        <input
+          class="worrow"
+          id="fisef"
+          maxlength="3"
+          oninput="moveToNext(fisef, fithf)"
+          onkeydown="onKeyDown(event, fifif, fisef)"
+        />
+        <input
+          class="worrow"
+          id="fithf"
+          maxlength="3"
+          oninput="moveToNext(fithf, fifof)"
+          onkeydown="onKeyDown(event, fisef, fithf)"
+        />
+        <input
+          class="worrow"
+          id="fifof"
+          maxlength="3"
+          oninput="moveToNext(fifof, null)"
+          onkeydown="onKeyDown(event, fithf, fifof)"
+        />
+
+        <!-- Second ROW (se) -->
+        <input
+          class="worrow"
+          id="sefif"
+          maxlength="3"
+          oninput="moveToNext(sefif, sesef)"
+          onkeydown="onKeyDown(event, null, sefif)"
+        />
+        <input
+          class="worrow"
+          id="sesef"
+          maxlength="3"
+          oninput="moveToNext(sesef, sethf)"
+          onkeydown="onKeyDown(event, sefif, sesef)"
+        />
+        <input
+          class="worrow"
+          id="sethf"
+          maxlength="3"
+          oninput="moveToNext(sethf, sefof)"
+          onkeydown="onKeyDown(event, sesef, sethf)"
+        />
+        <input
+          class="worrow"
+          id="sefof"
+          maxlength="3"
+          oninput="moveToNext(sefof, null)"
+          onkeydown="onKeyDown(event, sethf, sefof)"
+        />
+
+        <!-- Third ROW (th) -->
+        <input
+          class="worrow"
+          id="thfif"
+          maxlength="3"
+          oninput="moveToNext(thfif, thsef)"
+          onkeydown="onKeyDown(event, null, thfif)"
+        />
+        <input
+          class="worrow"
+          id="thsef"
+          maxlength="3"
+          oninput="moveToNext(thsef, ththf)"
+          onkeydown="onKeyDown(event, thfif, thsef)"
+        />
+        <input
+          class="worrow"
+          id="ththf"
+          maxlength="3"
+          oninput="moveToNext(ththf, thfof)"
+          onkeydown="onKeyDown(event, thsef, ththf)"
+        />
+        <input
+          class="worrow"
+          id="thfof"
+          maxlength="3"
+          oninput="moveToNext(thfof, null)"
+          onkeydown="onKeyDown(event, ththf, thfof)"
+        />
+
+        <!-- Fourth ROW (fo) -->
+        <input
+          class="worrow"
+          id="fofif"
+          maxlength="3"
+          oninput="moveToNext(fofif, fosef)"
+          onkeydown="onKeyDown(event, null, fofif)"
+        />
+        <input
+          class="worrow"
+          id="fosef"
+          maxlength="3"
+          oninput="moveToNext(fosef, fothf)"
+          onkeydown="onKeyDown(event, fofif, fosef)"
+        />
+        <input
+          class="worrow"
+          id="fothf"
+          maxlength="3"
+          oninput="moveToNext(fothf, fofof)"
+          onkeydown="onKeyDown(event, fosef, fothf)"
+        />
+        <input
+          class="worrow"
+          id="fofof"
+          maxlength="3"
+          oninput="moveToNext(fofof, null)"
+          onkeydown="onKeyDown(event, fothf, fofof)"
+        />
+
+        <!-- Fifth ROW (fv) -->
+        <input
+          class="worrow"
+          id="fvfif"
+          maxlength="3"
+          oninput="moveToNext(fvfif, fvsef)"
+          onkeydown="onKeyDown(event, null, fvfif)"
+        />
+        <input
+          class="worrow"
+          id="fvsef"
+          maxlength="3"
+          oninput="moveToNext(fvsef, fvthf)"
+          onkeydown="onKeyDown(event, fvfif, fvsef)"
+        />
+        <input
+          class="worrow"
+          id="fvthf"
+          maxlength="3"
+          oninput="moveToNext(fvthf, fvfof)"
+          onkeydown="onKeyDown(event, fvsef, fvthf)"
+        />
+        <input
+          class="worrow"
+          id="fvfof"
+          maxlength="3"
+          oninput="moveToNext(fvfof, null)"
+          onkeydown="onKeyDown(event, fvthf, fvfof)"
+        />
+
+        <!-- Sixth ROW (sx) -->
+        <input
+          class="worrow"
+          id="sxfif"
+          maxlength="3"
+          oninput="moveToNext(sxfif, sxsef)"
+          onkeydown="onKeyDown(event, null, sxfif)"
+        />
+        <input
+          class="worrow"
+          id="sxsef"
+          maxlength="3"
+          oninput="moveToNext(sxsef, sxthf)"
+          onkeydown="onKeyDown(event, sxfif, sxsef)"
+        />
+        <input
+          class="worrow"
+          id="sxthf"
+          maxlength="3"
+          oninput="moveToNext(sxthf, sxfof)"
+          onkeydown="onKeyDown(event, sxsef, sxthf)"
+        />
+        <input
+          class="worrow"
+          id="sxfof"
+          maxlength="3"
+          oninput="moveToNext(sxfof, null)"
+          onkeydown="onKeyDown(event, sxthf, sxfof)"
+        />
+
+        <!-- Seventh ROW (sv)-->
+        <input
+          class="worrow"
+          id="svfif"
+          maxlength="3"
+          oninput="moveToNext(svfif, svsef)"
+          onkeydown="onKeyDown(event, null, svfif)"
+        />
+        <input
+          class="worrow"
+          id="svsef"
+          maxlength="3"
+          oninput="moveToNext(svsef, svthf)"
+          onkeydown="onKeyDown(event, svfif, svsef)"
+        />
+        <input
+          class="worrow"
+          id="svthf"
+          maxlength="3"
+          oninput="moveToNext(svthf, svfof)"
+          onkeydown="onKeyDown(event, svsef, svthf)"
+        />
+        <input
+          class="worrow"
+          id="svfof"
+          maxlength="3"
+          oninput="moveToNext(svfof, null)"
+          onkeydown="onKeyDown(event, svthf, svfof)"
+        />
+
+        <!-- Eigth ROW (ei) -->
+        <input
+          class="worrow"
+          id="eifif"
+          maxlength="3"
+          oninput="moveToNext(eifif, eisef)"
+          onkeydown="onKeyDown(event, null, eifif)"
+        />
+        <input
+          class="worrow"
+          id="eisef"
+          maxlength="3"
+          oninput="moveToNext(eisef, eithf)"
+          onkeydown="onKeyDown(event, eifif, eisef)"
+        />
+        <input
+          class="worrow"
+          id="eithf"
+          maxlength="3"
+          oninput="moveToNext(eithf, eifof)"
+          onkeydown="onKeyDown(event, eisef, eithf)"
+        />
+        <input
+          class="worrow"
+          id="eifof"
+          maxlength="3"
+          oninput="moveToNext(eifof, null)"
+          onkeydown="onKeyDown(event, eithf, eifof)"
+        />
+      </div>
+
+      <div id="jp_preview_keyboard">
+        <!-- jp keyboard goes here -->
+        <!-- jp keyboard goes here -->
+        <!-- jp keyboard goes here -->
+      </div>
+
+      <div class="intsructions">
+        <h3 id="rules" style="margin-bottom: 0">ルール:</h3>
+        <label for="rules" style="margin-top: 0">
+          日本語 Wordle
+          を開発中です。今回の４文字単語を当ててみよう！4文字分の単語を組み合わせて答えを当てるゲームです。４文字単語を入力すると、文字の色でヒントがでる。<br />緑：文字と位置が正解。<br />黄：文字は正しいけど位置が違う。<br />灰色：その文字は含まれてない
+        </label>
+      </div>
+      <div id="quickinvalidpop" popover>
+        <h3>この単語は単語シストには存在しません！</h3>
+      </div>
+      <div id="victorypopup" popover>
+        <h3 id="victorypopupmsg">正解！単語が当たりました！</h3>
+        <button popovertarget="popcup" onclick="closePopUp()">閉じる</button>
+      </div>
+    </section>
+  </body>
+</html>

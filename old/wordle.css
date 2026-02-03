@@ -1,17 +1,24 @@
     body {
         margin: 0 auto;
-        background-color: rgb(213, 213, 213);
+        background-color: rgb(19, 19, 24);
         color: rgb(76, 76, 76);
         align-items: center;
         /* transition: 2000ms ease-in-out; */
         min-width: 500px;
     }
 
+    #game {
+        width: 50%;
+        min-width: 400px;
+        margin: 0 auto;
+        background-color: aliceblue;
+        padding: 5%;
+    }
+
     .intsructions {
         margin-bottom: 3%;
         margin: 0 auto;
         display: block;
-        width: 50%;
         font-size: small;
     }
 
@@ -20,7 +27,6 @@
     }
 
     .wordlebox {
-        width: 40%;
         height: auto;
         margin: 0 auto;
         display: grid; /* Makes the container a grid container */

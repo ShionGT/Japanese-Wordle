@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+/* ===================
+    基本設定
+=================== */
+* {
+  box-sizing: border-box;
+  font-family: "游ゴシック体", YuGothic, "游ゴシック体", "YuGothic", sans-serif;
+}
+
+body {
+  background-color: darkgray;
+}
+
+/* ===================
+    ナビゲーション
+=================== */
+.navbar {
+  text-align: center;
+  position: fixed;
+}
+
+.navbar .logo {
+  cursor: pointer;
+}
