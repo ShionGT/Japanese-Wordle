@@ -8,8 +8,8 @@
   font-family: "游ゴシック体", YuGothic, "游ゴシック体", "YuGothic", sans-serif;
 }
 
-body {
-  background-color: darkgray;
+header {
+  margin: 0 auto;
 }
 
 /* ===================
@@ -22,4 +22,25 @@ body {
 
 .navbar .logo {
   cursor: pointer;
+}
+
+body {
+  width: 70%;
+  min-width: 350px;
+  margin: 0 auto;
+}
+
+#main-table {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+input {
+  display: flexbox;
+  font-size: large;
+  min-width: 1rem;
+  min-height: 1.5rem;
+  width: 20%;
+  height: auto;
+  text-align: center;
 }

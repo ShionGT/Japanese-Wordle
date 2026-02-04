@@ -1,108 +1,3 @@
-// hiragana
-var hiraganas = new Map();
-// あ行
-hiraganas.set("a", "あ");
-hiraganas.set("i", "い");
-hiraganas.set("u", "う");
-hiraganas.set("e", "え");
-hiraganas.set("o", "お");
-// か行
-hiraganas.set("ka", "か");
-hiraganas.set("ki", "き");
-hiraganas.set("ku", "く");
-hiraganas.set("ke", "け");
-hiraganas.set("ko", "こ");
-// さ行
-hiraganas.set("sa", "さ");
-hiraganas.set("si", "し");
-hiraganas.set("su", "す");
-hiraganas.set("se", "せ");
-hiraganas.set("so", "そ");
-// た行
-hiraganas.set("ta", "た");
-hiraganas.set("ti", "ち");
-hiraganas.set("chi", "ち");
-hiraganas.set("ci", "ち");
-hiraganas.set("tsu", "つ");
-hiraganas.set("tu", "つ");
-hiraganas.set("te", "て");
-hiraganas.set("to", "と");
-// な行
-hiraganas.set("na", "な");
-hiraganas.set("ni", "に");
-hiraganas.set("nu", "ぬ");
-hiraganas.set("ne", "ね");
-hiraganas.set("no", "の");
-// は行
-hiraganas.set("ha", "は");
-hiraganas.set("hi", "ひ");
-hiraganas.set("hu", "ふ");
-hiraganas.set("fu", "ふ");
-hiraganas.set("he", "へ");
-hiraganas.set("ho", "ほ");
-// ま行
-hiraganas.set("ma", "ま");
-hiraganas.set("mi", "み");
-hiraganas.set("mu", "む");
-hiraganas.set("me", "め");
-hiraganas.set("mo", "も");
-// や行
-hiraganas.set("ya", "や");
-hiraganas.set("yu", "ゆ");
-hiraganas.set("yo", "よ");
-// ら行
-hiraganas.set("ra", "ら");
-hiraganas.set("ri", "り");
-hiraganas.set("ru", "る");
-hiraganas.set("re", "れ");
-hiraganas.set("ro", "ろ");
-// わ行
-hiraganas.set("wa", "わ");
-hiraganas.set("wo", "を");
-hiraganas.set("nn", "ん");
-// が行
-hiraganas.set("ga", "が");
-hiraganas.set("gi", "ぎ");
-hiraganas.set("gu", "ぐ");
-hiraganas.set("ge", "げ");
-hiraganas.set("go", "ご");
-// ざ行
-hiraganas.set("za", "ざ");
-hiraganas.set("zi", "じ");
-hiraganas.set("ji", "じ");
-hiraganas.set("zu", "ず");
-hiraganas.set("ze", "ぜ");
-hiraganas.set("zo", "ぞ");
-// だ行
-hiraganas.set("da", "だ");
-hiraganas.set("di", "ぢ");
-hiraganas.set("du", "づ");
-hiraganas.set("de", "で");
-hiraganas.set("do", "ど");
-// ば行
-hiraganas.set("ba", "ば");
-hiraganas.set("bi", "び");
-hiraganas.set("bu", "ぶ");
-hiraganas.set("be", "べ");
-hiraganas.set("bo", "ぼ");
-// ぱ行
-hiraganas.set("pa", "ぱ");
-hiraganas.set("pi", "ぴ");
-hiraganas.set("pu", "ぷ");
-hiraganas.set("pe", "ぺ");
-hiraganas.set("po", "ぽ");
-// 小文字
-hiraganas.set("xa", "ぁ");
-hiraganas.set("xi", "ぃ");
-hiraganas.set("xu", "ぅ");
-hiraganas.set("xe", "ぇ");
-hiraganas.set("xo", "ぉ");
-hiraganas.set("xya", "ゃ");
-hiraganas.set("xyu", "ゅ");
-hiraganas.set("xyo", "ょ");
-hiraganas.set("xtu", "っ");
-hiraganas.set("xtsu", "っ");
-
 /**
  * ・清音（46文字）: 50音表の基本となる「あいうえお」などの文字。
  * ・濁音（20文字）: 「が」「ぎ」「ぐ」「げ」「ご」「ざ」「じ」「ず」「ぜ」「ぞ」など。
@@ -366,7 +261,9 @@ async function processGuess(currentField) {
   const rowId = currentField.id.match(/^row\d+/)[0];
   const row = document.getElementById(rowId);
 
-  let inputs = Array.from(document.querySelectorAll("input"));
+  let inputs = Array.from(document.querySelectorAll("input")).filter((input) =>
+    input.id.startsWith("row" + rowCount),
+  );
   // get all cells in this row, ordered by cell index
   inputs.sort((a, b) => a.dataset.index - b.dataset.index);
 
@@ -439,11 +336,9 @@ async function processGuess(currentField) {
   document.querySelector(`#row${rowCount}cell0`).focus();
 }
 
-/***
- *
- ******** POP UP
- *
- * */
+/*=============================
+     POP UP
+ =============================*/
 
 function closePopUp() {
   document.getElementById("victorypopup").style.display = "none";
