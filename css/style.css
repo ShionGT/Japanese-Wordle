@@ -9,7 +9,7 @@
 }
 
 body {
-  width: 50%;
+  width: 70%;
   min-width: 350px;
   margin: 0 auto;
   background-color: bisque;
@@ -18,7 +18,9 @@ body {
 header {
   text-align: center;
   background-color: burlywood;
-  margin: 0 auto;
+  padding: 2rem;
+  margin: 1rem auto;
+  margin-top: 0;
 }
 
 main {
@@ -46,18 +48,13 @@ footer {
 
 #main-table {
   width: 100%;
-  /* display: flex;
-  flex-direction: row; */
   grid-template-columns: repeat(4, 1fr);
-  justify-content: space-between;
-  gap: 2rem;
 }
 
 input {
-  font-size: large;
-  min-width: 1rem;
-  min-height: 1.5rem;
-  width: 22%;
-  height: auto;
+  font-size: 32px;
+  width: 4rem;
+  min-width: 3rem;
+  aspect-ratio: 1 / 1;
   text-align: center;
 }
