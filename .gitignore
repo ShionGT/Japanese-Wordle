@@ -420,3 +420,6 @@ FodyWeavers.xsd
 .idea/
 output/
 python/output/
+.DS_Store
+IDEA.md
+.DS_Store
