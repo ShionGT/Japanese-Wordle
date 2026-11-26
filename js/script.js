@@ -1,33 +1,26 @@
-/**
- * ・清音（46文字）: 50音表の基本となる「あいうえお」などの文字。
- * ・濁音（20文字）: 「が」「ぎ」「ぐ」「げ」「ご」「ざ」「じ」「ず」「ぜ」「ぞ」など。
- * ・半濁音（5文字）: 「ぱ」「ぴ」「ぷ」「ぺ」「ぽ」。
- * 合計: \(46+20+5=71\)文字。
- */
+// js/script.js
+// Main game controller for わあどる — ES module
 
-// initialize gloabal variables
-var hiraganaArray = [...new Set(Array.from(hiraganas.values()))];
-var answer = "";
-var answerKanji = "";
-// more initial variables
-var rowCount = 0;
-const maxLen = 4;
+import { GameModel, pickRandom, scoreGuess } from "./game.js";
+import { mountKeyboard } from "./keyboard.js";
 
-/* ==============================
-     GENERIC FUNCTIONS
-  ============================== */
+const WORD_LENGTH = 4;
 
+// DOM elements
+const board = document.getElementById("board");
+const keyboardContainer = document.getElementById("keyboard");
+const toast = document.getElementById("toast");
+const victoryModal = document.getElementById("victory-modal");
+const victoryAnswer = document.getElementById("victory-answer");
+const attemptCount = document.getElementById("attempt-count");
+const closeVictoryBtn = document.getElementById("close-victory");
+const playAgainBtn = document.getElementById("play-again");
+const themeToggle = document.getElementById("theme-toggle");
+const physicalInput = document.getElementById("physical-input");
+
+// Word repository (fetch + cache)
 const wordCache = new Map();
 
-async function getWordList(hiragana) {
-  if (!wordCache.has(hiragana)) {
-    const data = await fetchData(`json/katakana_data_${hiragana}行.json`);
-    wordCache.set(hiragana, data || []);
-  }
-  return wordCache.get(hiragana);
-}
-
-// generic fetch function
 async function fetchData(filepath) {
   try {
     const response = await fetch(filepath);
@@ -39,325 +32,374 @@ async function fetchData(filepath) {
   }
 }
 
-/* ==============================
-     GET NEW ANSWER
-  ============================== */
-/**
- * gets the random answer from a random JSON file
- * json file is selected based on a random hiragana character
- * @returns the answer
- */
-async function getNewAnswer() {
-  let answer = "";
-  // create random values to select a random hiragana character
-  let randomNum = Math.round(Math.random() * 70); // there are 71 hiragana characters
-  // console.log(hiraganaArray[70])
-  while (
-    hiraganaArray[randomNum] == "づ" ||
-    hiraganaArray[randomNum] == "を" ||
-    hiraganaArray[randomNum] == "ん"
-  ) {
-    // no word start from 「づ」「を」「ん」
-    randomNum = Math.round(Math.random() * 70); // there are 71 hiragana characters
+async function getWordList(initialKana) {
+  if (!wordCache.has(initialKana)) {
+    const data = await fetchData(`json/katakana_data_${initialKana}行.json`);
+    wordCache.set(initialKana, data || []);
   }
-
-  // // testing logs
-  // console.log(`Random Num: ${randomNum}`);
-
-  // get the random hiragana character
-  const randomHiragana = hiraganaArray[randomNum];
-  console.log(`Selected JSON: json/katakana_data_${randomHiragana}行.json`);
-
-  // update loading status
-  console.log("Initializing word list...");
-
-  // fetch the data from the selected JSON file
-  data = await getWordList(randomHiragana);
-
-  if (data) {
-    d_len = data.length;
-    console.log(`Loaded ${d_len} words from the file.`);
-
-    // select a random answer from the loaded data
-    loaded_load_array = data.map((item) => item.kana);
-    // console.log("loaded array: " + str(loaded_load_array));
-    answer = loaded_load_array[Math.round(Math.floor(Math.random() * d_len))];
-    answerKanji = data.find((item) => item.kana == answer).word;
-  }
-
-  // update loading status
-  console.log("File Loaded.");
-  // out
-  console.log("Answer selected: " + answer);
-  return answer;
-}
-/**
- * Function for to run at start. Is called by the html main page.
- */
-async function onLoad() {
-  answer = await getNewAnswer();
-  createRow();
+  return wordCache.get(initialKana);
 }
 
-/* ==============================
-     MOVE TO NEXT
-  ============================== */
-
-/**
- * minus one
- * @param {*} num the number to minus one
- * @returns the number after minus one, no change if too low
- */
-function minusOne(num) {
-  if (num <= 0) {
-    return 0;
-  }
-  return num - 1;
+async function isValidWord(word) {
+  if (word.length !== WORD_LENGTH) return false;
+  const initial = word[0];
+  const data = await getWordList(initial);
+  if (!data) return false;
+  return data.some(item => item.kana === word);
 }
 
-/**
- * plus one
- * @param {*} num the number to plus one
- * @returns the number after plus one, no change if too high
- */
-function plusOne(num) {
-  return num < maxLen - 1 ? num + 1 : null;
+// Answer selection: choose from the 71 full-size kana (first 71 unique values), excluding づ/を/ん
+function getAnswerInitials() {
+  const allValues = Array.from(globalThis.hiraganas.values());
+  // First 71 are the full-size kana (46 seion + 20 dakuten + 5 handakuten)
+  const fullSize = allValues.slice(0, 71);
+  return fullSize.filter(ch => ch !== "づ" && ch !== "を" && ch !== "ん");
 }
 
-/**
- * automatically moves to the next column if a japanese character is typed in
- * @param {*} currentField the current input field we are checking on
- * @param {*} nextField the next input field to move to
- */
-function moveToNext(currentField, nextField) {
-  const strr = currentField.value + "";
-  currentField.value = currentField.value.trim();
-
-  if (hiraganaArray.includes(strr) && nextField != null) {
-    nextField.focus();
-  } else if (
-    strr.endsWith("a") ||
-    strr.endsWith("i") ||
-    strr.endsWith("u") ||
-    strr.endsWith("e") ||
-    strr.endsWith("o") ||
-    strr.endsWith("n")
-  ) {
-    const japchar = hiraganas.get(strr);
-    if (japchar != undefined) {
-      currentField.value = japchar;
-      if (nextField != null) {
-        nextField.focus();
-      }
+async function loadNewAnswer() {
+  const initials = getAnswerInitials();
+  // Try up to 5 different initials in case a JSON file is missing/empty
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const initial = pickRandom(initials);
+    const data = await getWordList(initial);
+    if (data && data.length > 0) {
+      const item = pickRandom(data);
+      return { kana: item.kana, kanji: item.word };
     }
   }
+  // Fallback: shouldn't happen, but handle gracefully
+  showToast("単語を読み込めませんでした。ページを再読み込みしてください。", 5000);
+  throw new Error("Failed to load answer after multiple attempts");
 }
 
-/**
- * actions when the key is down
- * @param {*} event key event
- * @param {*} previousField the previous field for actions
- * @param {*} currentField the current field for getting inputs
- */
-function onKeyDown(event, previousField, currentField) {
-  const key = event.key;
+// Game state
+let game = null;
+let keyboardAPI = null;
+let inputLocked = false;
+let composing = false;
 
-  if (key === "Backspace" || key === "Delete") {
-    if (previousField != null && currentField.value == "") {
-      previousField.focus();
-      const length = previousField.value.length;
-      previousField.setSelectionRange(length, length);
+// Initialize game
+async function initGame() {
+  try {
+    const { kana, kanji } = await loadNewAnswer();
+    game = new GameModel(kana, kanji);
+    renderBoard();
+    mountKeyboardComponent();
+    setupPhysicalInput();
+    setupThemeToggle();
+    setupModalButtons();
+    // Focus physical input on desktop (pointer:fine) for IME/keyboard
+    if (window.matchMedia("(pointer:fine)").matches) {
+      physicalInput.focus({ preventScroll: true });
     }
-  }
-
-  if (answer && key === "Enter") {
-    if (currentField.id.endsWith(maxLen - 1)) {
-      // user guesses here
-      processGuess(currentField);
-    }
+  } catch (e) {
+    console.error("Game initialization failed:", e);
+    showToast("ゲームの初期化に失敗しました。", 5000);
   }
 }
 
-function createRow() {
-  rowCount += 1;
-  // the name of the class of the container
-  const container = document.getElementById("main-table");
-  // the div for the row
-  const rowDiv = document.createElement("div");
-  rowDiv.id = "row" + rowCount;
-  rowDiv.className = "row";
-  // the stuff inside the row
-  for (let i = 0; i < maxLen; i++) {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.id = rowDiv.id + "cell" + i;
-    input.className = "cell";
-    input.maxLength = 3;
-    input.addEventListener("input", () => {
-      moveToNext(
-        input,
-        document.getElementById(rowDiv.id + "cell" + plusOne(i)),
-      );
-    });
-    input.addEventListener("keydown", (event) => {
-      onKeyDown(
-        event,
-        document.getElementById(rowDiv.id + "cell" + minusOne(i)),
-        input,
-      );
-    });
-
-    rowDiv.appendChild(input);
+// Render the entire board from game state
+function renderBoard() {
+  board.innerHTML = "";
+  // Render locked guesses
+  for (const guess of game.guesses) {
+    const row = createTileRow(guess.word, guess.states, true);
+    board.appendChild(row);
   }
-  container.appendChild(rowDiv);
-}
-
-/* ==============================
-     PROCESS GUESS METHOD
-  ============================== */
-
-/**
- * for some i, res[i] = 2 if correct, 1 if correct letter but incorrect spot, or 0 if incorrect
- * @param {*} answerList - the correct answer of the word in a list
- * @param {*} guessList  - the user's guess of the word in a list
- * @returns the organized list of arrays
- */
-function getCorrectionStateArray(answerList, guessList) {
-  // res is always propertional to user guess index
-  let res = new Array(answerList.length);
-  let tempAns = [...answerList];
-
-  // console.log(`temp=${temp} res=${res} guessList=${guessList} answerList=${answerList}`)
-
-  // logn search thru the words
-  for (let i = 0; i < answerList.length; i++) {
-    if (guessList[i] === answerList[i]) {
-      tempAns[i] = "2";
-      res[i] = 2;
-    }
-  }
-  for (let i = 0; i < res.length; i++) {
-    if (res[i] == 2) {
-      continue;
-    }
-    for (let j = 0; j < res.length; j++) {
-      if (guessList[i] === tempAns[j]) {
-        tempAns[j] = "1";
-        res[i] = 1;
-        break;
-      }
-    }
-  }
-  // console.log(`temp=${temp} res=${res} guessList=${guessList} answerList=${answerList}`)
-  return res;
-}
-
-/**
- * writes and processes the user guess while keeping track of html
- * @param {HTMLInputElement} currentField
- */
-async function processGuess(currentField) {
-  // extract row id (e.g. "row3" from "row3cell2")
-  const rowId = currentField.id.match(/^row\d+/)[0];
-  const row = document.getElementById(rowId);
-
-  let inputs = Array.from(document.querySelectorAll("input")).filter((input) =>
-    input.id.startsWith("row" + rowCount),
-  );
-  // get all cells in this row, ordered by cell index
-  inputs.sort((a, b) => a.dataset.index - b.dataset.index);
-
-  const userAnswer = inputs.map((input) => input.value.trim());
-  const joinedUserAnswer = userAnswer.join("");
-
-  console.log("Processing guess:", joinedUserAnswer);
-
-  /* ----------------------------
-     VALID WORD CHECK
-  ----------------------------- */
-
-  let isInvalidAnswer = false;
-
-  await fetchData(`json/katakana_data_${userAnswer[0]}行.json`).then((data) => {
-    if (!data) return;
-    const matchedWord = data.find((word) => word.kana === joinedUserAnswer);
-    if (!matchedWord) {
-      isInvalidAnswer = true;
-    }
+  // Render current guess row (always present)
+  const currentRow = createTileRow(game.currentGuess, null, false);
+  board.appendChild(currentRow);
+  // Scroll to bottom to show active row
+  requestAnimationFrame(() => {
+    board.scrollTop = board.scrollHeight;
   });
+}
 
-  if (isInvalidAnswer) {
-    console.warn("Received an invalid answer.");
-    quickInvalidPopUp(1000);
+// Create a tile row element
+function createTileRow(word, states, locked) {
+  const row = document.createElement("div");
+  row.className = "tile-row";
+  if (locked) row.dataset.locked = "true";
+
+  const chars = Array.from(word).concat(Array(WORD_LENGTH - word.length).fill(""));
+  for (let i = 0; i < WORD_LENGTH; i++) {
+    const tile = document.createElement("div");
+    tile.className = "tile";
+    tile.textContent = chars[i];
+    if (chars[i]) tile.classList.add("filled");
+    if (locked && states) {
+      tile.dataset.state = states[i];
+      tile.classList.add(states[i] === 2 ? "correct" : states[i] === 1 ? "present" : "absent");
+    }
+    row.appendChild(tile);
+  }
+  return row;
+}
+
+// Update a single tile (for pop animation on input)
+function updateTile(index, char, isLastInserted = false) {
+  const currentRow = board.lastElementChild;
+  if (!currentRow) return;
+  const tile = currentRow.children[index];
+  if (!tile) return;
+  tile.textContent = char;
+  tile.classList.add("filled");
+  if (isLastInserted) {
+    tile.classList.add("pop");
+    tile.addEventListener("animationend", () => tile.classList.remove("pop"), { once: true });
+  }
+}
+
+// Clear current row tiles (for backspace)
+function clearTile(index) {
+  const currentRow = board.lastElementChild;
+  if (!currentRow) return;
+  const tile = currentRow.children[index];
+  if (!tile) return;
+  tile.textContent = "";
+  tile.classList.remove("filled");
+}
+
+// Mount on-screen keyboard
+function mountKeyboardComponent() {
+  keyboardAPI = mountKeyboard(keyboardContainer, {
+    onKana: (kana) => handleKanaInput(kana),
+    onSubmit: () => handleSubmit(),
+    onDelete: () => handleBackspace(),
+  });
+}
+
+// Show toast message
+function showToast(message, duration = 1500) {
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, duration);
+}
+
+// Handle kana input from on-screen keyboard or physical input
+function handleKanaInput(kana) {
+  if (inputLocked || game.status !== "playing") return;
+  const inserted = game.consumeText(kana);
+  for (const [idx, ch] of inserted.entries()) {
+    const tileIndex = game.currentGuess.length - inserted.length + idx;
+    updateTile(tileIndex, ch, idx === inserted.length - 1);
+  }
+}
+
+// Handle backspace
+function handleBackspace() {
+  if (inputLocked || game.status !== "playing") return;
+  const hadBuffer = game.romajiBuffer.length > 0;
+  const prevLength = game.currentGuess.length;
+  const deleted = game.backspace();
+  if (deleted) {
+    if (hadBuffer) {
+      // Romaji buffer changed; current row unchanged (buffer not shown in tiles)
+      // Could show buffer in active tile but spec says tiles show completed kana only
+    } else {
+      // Removed a completed kana
+      clearTile(prevLength - 1);
+    }
+  }
+}
+
+// Handle submit (Enter / 決定)
+async function handleSubmit() {
+  if (inputLocked || game.status !== "playing") return;
+  inputLocked = true;
+
+  const result = await game.submit(isValidWord);
+
+  if (result.type === "incomplete") {
+    // Shake current row
+    const currentRow = board.lastElementChild;
+    if (currentRow) {
+      currentRow.classList.add("shake");
+      currentRow.addEventListener("animationend", () => currentRow.classList.remove("shake"), { once: true });
+    }
+    showToast("4文字すべてを入力してください");
+    inputLocked = false;
     return;
   }
 
-  /* ----------------------------
-     CHECK CORRECTNESS
-  ----------------------------- */
+  if (result.type === "invalid") {
+    // Shake current row
+    const currentRow = board.lastElementChild;
+    if (currentRow) {
+      currentRow.classList.add("shake");
+      currentRow.addEventListener("animationend", () => currentRow.classList.remove("shake"), { once: true });
+    }
+    showToast("その四文字はリストにありません");
+    inputLocked = false;
+    return;
+  }
 
-  const answerArray = answer.split("");
-  const answerStatusArray = getCorrectionStateArray(answerArray, userAnswer);
+  // Valid guess: animate reveal
+  const currentRow = board.lastElementChild;
+  const tiles = Array.from(currentRow.children);
+  const states = result.guess.states;
 
-  inputs.forEach((box, i) => {
+  // Staggered flip animation
+  for (let i = 0; i < WORD_LENGTH; i++) {
+    const tile = tiles[i];
+    const delay = i * 250;
     setTimeout(() => {
-      switch (answerStatusArray[i]) {
-        case 2:
-          box.style.backgroundColor = "lightgreen"; // correct
-          break;
-        case 1:
-          box.style.backgroundColor = "yellow"; // wrong position
-          break;
-        default:
-          box.style.backgroundColor = "lightgray"; // not in answer
-      }
-    }, 500);
-  });
-
-  const isCorrect = joinedUserAnswer === answer;
-
-  /* ----------------------------
-     LOCK CURRENT ROW
-  ----------------------------- */
-
-  inputs.forEach((input) => (input.disabled = true));
-
-  /* ----------------------------
-     MOVE TO NEXT ROW / END GAME
-  ----------------------------- */
-
-  if (isCorrect) {
-    showVictory();
-    return;
+      tile.classList.add("flip");
+      // At halfway point, swap to final state
+      setTimeout(() => {
+        tile.dataset.state = states[i];
+        tile.classList.remove("filled");
+        tile.classList.add(states[i] === 2 ? "correct" : states[i] === 1 ? "present" : "absent");
+      }, 250);
+    }, delay);
   }
 
-  // create next row and focus first cell
-  createRow();
-  document.querySelector(`#row${rowCount}cell0`).focus();
+  const totalRevealTime = (WORD_LENGTH - 1) * 250 + 500;
+
+  if (result.type === "correct") {
+    // Victory after reveal
+    setTimeout(() => {
+      showVictory();
+      inputLocked = false;
+    }, totalRevealTime + 250);
+  } else {
+    // Incorrect: after reveal, re-render board (adds new empty row)
+    setTimeout(() => {
+      renderBoard();
+      updateKeyboardColors();
+      inputLocked = false;
+      // Focus physical input for next guess
+      physicalInput.focus({ preventScroll: true });
+    }, totalRevealTime);
+  }
 }
 
-/*=============================
-     POP UP
- =============================*/
-
-function closePopUp() {
-  document.getElementById("victorypopup").style.display = "none";
+// Update keyboard key colors based on all guesses
+function updateKeyboardColors() {
+  if (!keyboardAPI) return;
+  const keyStates = new Map();
+  // Priority: correct (2) > present (1) > absent (0)
+  for (const guess of game.guesses) {
+    const chars = Array.from(guess.word);
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+      const state = guess.states[i];
+      const existing = keyStates.get(ch);
+      if (existing === undefined || state > existing) {
+        keyStates.set(ch, state);
+      }
+    }
+  }
+  keyboardAPI.updateKeyStates(keyStates);
 }
 
+// Show victory modal
 function showVictory() {
-  setTimeout(function () {
-    var popup = document.getElementById("victorypopup");
-    popup.style.display = "block";
-    document.getElementById("victorypopupmsg").innerText =
-      `正解！答えは「${answer}(${answerKanji})」でした！`;
-    document.getElementById("background").style.backgroundColor = "lightgreen";
-  }, 1000);
+  victoryAnswer.textContent = `${game.answer}（${game.answerKanji}）`;
+  attemptCount.textContent = `試行回数: ${game.guesses.length}`;
+  victoryModal.showModal();
 }
 
-function quickInvalidPopUp(delayMilliseconds) {
-  var popup = document.getElementById("quickinvalidpop");
-  popup.style.display = "block"; // Show the popup
-  setTimeout(function () {
-    popup.style.display = "none"; // Hide the popup after the delay
-  }, delayMilliseconds);
+// Physical input handling (for physical keyboard + IME)
+function setupPhysicalInput() {
+  // composition events for IME
+  physicalInput.addEventListener("compositionstart", () => {
+    composing = true;
+  });
+  physicalInput.addEventListener("compositionend", (e) => {
+    composing = false;
+    // The final composed text is in e.data or physicalInput.value
+    const text = e.data || physicalInput.value;
+    if (text) {
+      physicalInput.value = "";
+      handlePhysicalText(text);
+    }
+  });
+
+  // input event for non-IME typing (when not composing)
+  physicalInput.addEventListener("input", (e) => {
+    if (composing) return;
+    const text = e.target.value;
+    if (text) {
+      e.target.value = "";
+      handlePhysicalText(text);
+    }
+  });
+
+  // keydown for special keys (Enter, Backspace) when physical input is focused
+  physicalInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
+    } else if (e.key === "Backspace" || e.key === "Delete") {
+      e.preventDefault();
+      handleBackspace();
+    }
+    // Let other keys go through to input event
+  });
+
+  // Global keydown for when focus is not on physical input
+  document.addEventListener("keydown", (e) => {
+    // Don't intercept if modal open
+    if (victoryModal.open) return;
+    // Don't intercept if typing in physical input (let its handlers run)
+    if (document.activeElement === physicalInput) return;
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
+    } else if (e.key === "Backspace" || e.key === "Delete") {
+      e.preventDefault();
+      handleBackspace();
+    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      // Printable character: feed to game and focus physical input for subsequent IME
+      handlePhysicalText(e.key);
+      physicalInput.focus({ preventScroll: true });
+    }
+  });
 }
+
+function handlePhysicalText(text) {
+  if (inputLocked || game.status !== "playing") return;
+  const inserted = game.consumeText(text);
+  for (const [idx, ch] of inserted.entries()) {
+    const tileIndex = game.currentGuess.length - inserted.length + idx;
+    updateTile(tileIndex, ch, idx === inserted.length - 1);
+  }
+}
+
+// Theme toggle
+function setupThemeToggle() {
+  themeToggle.addEventListener("click", () => {
+    const isDark = document.documentElement.dataset.theme === "dark";
+    document.documentElement.dataset.theme = isDark ? "light" : "dark";
+    try {
+      localStorage.setItem("waadoru-theme", isDark ? "light" : "dark");
+    } catch (e) {
+      // ignore
+    }
+  });
+}
+
+// Modal buttons
+function setupModalButtons() {
+  closeVictoryBtn.addEventListener("click", () => {
+    victoryModal.close();
+  });
+
+  playAgainBtn.addEventListener("click", () => {
+    victoryModal.close();
+    location.reload();
+  });
+
+  // Close modal on Escape
+  victoryModal.addEventListener("cancel", (e) => {
+    e.preventDefault(); // prevent default close
+    // We don't auto-close on Escape; user must click 閉じる or もう一度
+  });
+}
+
+// Start
+initGame();
