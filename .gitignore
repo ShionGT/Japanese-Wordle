@@ -423,3 +423,4 @@ python/output/
 .DS_Store
 IDEA.md
 .DS_Store
+.worktrees/

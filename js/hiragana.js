@@ -102,3 +102,6 @@ hiraganas.set("xyu", "ゅ");
 hiraganas.set("xyo", "ょ");
 hiraganas.set("xtu", "っ");
 hiraganas.set("xtsu", "っ");
+
+// Make the map available to ES modules and classic scripts alike
+globalThis.hiraganas = hiraganas;
